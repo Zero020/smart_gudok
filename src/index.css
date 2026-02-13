@@ -12,3 +12,12 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-200 rounded-full;
 }
+
+@layer utilities {
+  .text-primary {
+    color: #14B8A6;
+  }
+  .bg-primary {
+    background-color: #14B8A6;
+  }
+}

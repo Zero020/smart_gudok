@@ -1,7 +1,6 @@
 import { useState} from 'react';
 import type { Subscription, Category } from '../types';
 
-// '전체'를 제외한 실제 등록 가능한 카테고리 목록만 정의합니다.
 const FORM_CATEGORIES: Category[] = ['쇼핑', '콘텐츠', '생활', '교육', '렌탈', '기타'];
 
 interface Props {
@@ -12,7 +11,6 @@ interface Props {
 }
 
 const SubscriptionModal = ({ isOpen, onClose, onSubmit, editingSub }: Props) => {
-    // 초기값 객체를 분리하여 재사용성을 높입니다.
     const initialState: Omit<Subscription, 'id'> = {
         name: '',
         price: 0,
@@ -129,7 +127,7 @@ const [formData, setFormData] = useState<Omit<Subscription, 'id'>>(
 
                 <button
                     onClick={() => onSubmit({ ...formData, id: editingSub?.id || Date.now().toString() } as Subscription)}
-                    className="w-full py-4 rounded-2xl bg-primary text-white font-bold text-lg hover:brightness-95 transition-all shadow-lg shadow-teal-100 active:scale-[0.98]"
+                    className="w-full py-4 rounded-2xl bg-primary text-white font-bold text-lg hover:brightness-95 transition-all shadow-lg shadow-gray-300 active:scale-[0.98]"
                 >
                     {editingSub ? '수정 완료' : '등록하기'}
                 </button>
