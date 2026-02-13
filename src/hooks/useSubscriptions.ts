@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Subscription } from '../types';
 
 export const useSubscriptions = () => {
-  // useState의 인자로 함수를 전달하여 초기 렌더링 시에만 localStorage를 읽습니다.
+  // useState의 인자로 함수를 전달하여 초기 렌더링 시에만 localStorage를 읽기
   const [subscriptions, setSubscriptions] = useState<Subscription[]>(() => {
     const savedData = localStorage.getItem('guddok_data');
     return savedData ? JSON.parse(savedData) : [];

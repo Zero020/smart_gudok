@@ -5,6 +5,7 @@ import type { Subscription } from '../types';
 import icon_trash from "..//assets/icon_trash.svg";
 import icon_edit from "..//assets/icon_edit.svg";
 
+// 카테고리 목록(필터용)
 const CATEGORIES = ['전체', '쇼핑', '콘텐츠', '생활', '교육', '렌탈', '기타'];
 
 const Manage = () => {
@@ -18,6 +19,7 @@ const Manage = () => {
     filter === '전체' ? true : sub.category === filter
   );
 
+  //등록/수정 모달 핸들러
   const handleOpenAdd = () => {
     setEditingSub(null);
     setIsModalOpen(true);
@@ -32,6 +34,15 @@ const Manage = () => {
     if (editingSub) updateSubscription(sub);
     else addSubscription(sub);
     setIsModalOpen(false);
+  };
+
+  const handleDelete = (id: string, name: string) => {
+    // 브라우저 기본 확인 창 호출
+    const isConfirmed = window.confirm(`'${name}' 구독을 정말 삭제하시겠습니까?`);
+
+    if (isConfirmed) {
+      deleteSubscription(id);
+    }
   };
 
   // 이용률 바 색상 결정 로직
@@ -59,8 +70,8 @@ const Manage = () => {
               key={cat}
               onClick={() => setFilter(cat)}
               className={`hover:scale-102 cursor-pointer px-6 py-2 rounded-lg text-sm font-medium transition-all border ${filter === cat
-                  ? 'bg-primary text-white stroke-1'
-                  : 'bg-white text-gray-400 hover:border-[rgba(16,170,144,0.5)] border-gray-300'
+                ? 'bg-primary text-white stroke-1'
+                : 'bg-white text-gray-400 hover:border-[rgba(16,170,144,0.5)] border-gray-300'
                 }`}
             >
               {cat}
@@ -88,7 +99,7 @@ const Manage = () => {
                   <button onClick={() => handleOpenEdit(sub)} className="opacity-40 hover:opacity-100 transition-opacity">
                     <img src={icon_edit} alt="edit" className="w-5 h-5" />
                   </button>
-                  <button onClick={() => deleteSubscription(sub.id)} className="opacity-40 hover:opacity-100 transition-opacity">
+                  <button onClick={() => handleDelete(sub.id, sub.name)} className="opacity-40 hover:opacity-100 transition-opacity">
                     <img src={icon_trash} alt="delete" className="w-5 h-5" />
                     {/* 아이콘 파일이 없다면 '🗑' 로 대체 가능 */}
                   </button>
@@ -133,6 +144,7 @@ const Manage = () => {
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
         editingSub={editingSub}
+        subscriptions={subscriptions}
       />
     </div>
   );

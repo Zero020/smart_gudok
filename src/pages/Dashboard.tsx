@@ -65,7 +65,6 @@ const Dashboard = () => {
     });
   }, [subscriptions]);
 
-  // 'Subscription' 미사용 경고 해결을 위한 명시적 타입 할당 (sortedSubs에 타입 부여)
   const typedSortedSubs: Subscription[] = sortedSubs;
 
   if (subscriptions.length === 0) {

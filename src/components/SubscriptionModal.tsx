@@ -1,6 +1,7 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import type { Subscription, Category } from '../types';
 
+//구독 종류 옵션
 const FORM_CATEGORIES: Category[] = ['쇼핑', '콘텐츠', '생활', '교육', '렌탈', '기타'];
 
 interface Props {
@@ -8,9 +9,11 @@ interface Props {
     onClose: () => void;
     onSubmit: (sub: Subscription) => void;
     editingSub?: Subscription | null;
+    subscriptions: Subscription[];
 }
 
-const SubscriptionModal = ({ isOpen, onClose, onSubmit, editingSub }: Props) => {
+const SubscriptionModal = ({ isOpen, onClose, onSubmit, editingSub, subscriptions }: Props) => {
+    // 초기 상태 정의
     const initialState: Omit<Subscription, 'id'> = {
         name: '',
         price: 0,
@@ -20,16 +23,54 @@ const SubscriptionModal = ({ isOpen, onClose, onSubmit, editingSub }: Props) => 
         usageLevel: 50,
     };
 
-const [formData, setFormData] = useState<Omit<Subscription, 'id'>>(
+    //초기값 데이터 결정
+    const [formData, setFormData] = useState<Omit<Subscription, 'id'>>(
         editingSub ? { ...editingSub } : initialState
     );
+
     if (!isOpen) return null;
 
+    // 인원 조절 핸들러
     const handlePeopleChange = (val: number) => {
         setFormData(prev => ({ ...prev, sharedPeople: Math.max(1, prev.sharedPeople + val) }));
     };
 
     const actualPrice = Math.floor(formData.price / formData.sharedPeople);
+
+    const handleFormSubmit = () => {
+        const { name, price, billingDate } = formData;
+
+        // 필수 입력 체트
+        if (!name.trim() || !price) {
+            alert("서비스명과 월 요금은 필수 입력 항목입니다!");
+            return;
+        }
+
+        // 결제 일자 범위 제한 (1~31)
+        if (billingDate < 1 || billingDate > 31) {
+            alert("결제일은 1일에서 31일 사이로 입력해주세요.");
+            return;
+        }
+        if (price < 0) {
+            alert("금액은 0원 이상이어야 합니다.");
+            return;
+        }
+
+        // 서비스명 중복시 경고
+        const isDuplicate = subscriptions.some(sub => 
+            sub.name.toLowerCase() === name.trim().toLowerCase() && sub.id !== editingSub?.id
+        );
+
+        if (isDuplicate) {
+            const proceed = window.confirm(`이미 '${name}' 서비스가 등록되어 있습니다. 추가로 등록하시겠습니까?`);
+            if (!proceed) return;
+        }
+
+        onSubmit({ 
+            ...formData, 
+            id: editingSub?.id || Date.now().toString() 
+        } as Subscription);
+    };
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
@@ -39,6 +80,7 @@ const [formData, setFormData] = useState<Omit<Subscription, 'id'>>(
                 <h2 className="text-2xl font-bold text-gray-900">{editingSub ? '구독 수정' : '구독 추가'}</h2>
 
                 <div className="space-y-5">
+                    {/* 서비스명 */}
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-500">서비스명</label>
                         <input
@@ -50,6 +92,7 @@ const [formData, setFormData] = useState<Omit<Subscription, 'id'>>(
                         />
                     </div>
 
+                    {/* 월 요금 */}
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-500">월 요금 (원)</label>
                         <input
@@ -77,7 +120,6 @@ const [formData, setFormData] = useState<Omit<Subscription, 'id'>>(
                                 value={formData.category}
                                 onChange={e => setFormData({ ...formData, category: e.target.value as Category })}
                             >
-                                {/* '전체'가 없는 FORM_CATEGORIES를 사용하여 타입 에러를 원천 차단합니다. */}
                                 {FORM_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                             </select>
                         </div>
@@ -126,7 +168,7 @@ const [formData, setFormData] = useState<Omit<Subscription, 'id'>>(
                 </div>
 
                 <button
-                    onClick={() => onSubmit({ ...formData, id: editingSub?.id || Date.now().toString() } as Subscription)}
+                    onClick={handleFormSubmit}
                     className="w-full py-4 rounded-2xl bg-primary text-white font-bold text-lg hover:brightness-95 transition-all shadow-lg shadow-gray-300 active:scale-[0.98]"
                 >
                     {editingSub ? '수정 완료' : '등록하기'}
