@@ -35,7 +35,7 @@
 
 - **스마트 필터:** 카테고리별 필터링 기능을 통해 관리 효율을 높였습니다.
 
-### 3. 예외 상황 및 과소비 방지 (Edge Case Handling)
+### 3. 과소비 방지
 - **중복 구독 경고:** 동일 카테고리(예: 콘텐츠)에 2개 이상의 서비스가 등록될 경우, 연간 절약 가능 금액을 계산하여 경고 배너를 띄웁니다.
 
 - **가성비 탐지:** 사용자가 입력한 '이용률(가성비)'이 40퍼센트 이하인 서비스를 별도로 분류하여 해지를 권고합니다.
@@ -45,11 +45,7 @@
 ## 🛠 Tech Stack
 - **Frontend:** React, TypeScript, Tailwind CSS
 
-- **State Management:** React Hooks (Custom Hook: useSubscriptions)
-
 - **Visualization:** Recharts
-
-- **Storage:** Browser LocalStorage (별도 서버 없이 개인정보를 사용자 기기에 안전하게 보관)
 
 - **Deployment:** Vercel
 
