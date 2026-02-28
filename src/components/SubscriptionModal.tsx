@@ -81,7 +81,10 @@ const SubscriptionModal = ({ isOpen, onClose, onSubmit, editingSub, subscription
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
             <div className="bg-white w-full max-w-[440px] rounded-[32px] p-10 space-y-7 shadow-2xl relative">
-                <button onClick={onClose} className="absolute right-8 top-8 text-gray-400 text-2xl">✕</button>
+                <button onClick={() => {
+                    trackEvent('edit_modal_close_without_submit');
+                    onClose();
+                }} className="absolute right-8 top-8 text-gray-400 text-2xl">✕</button>
 
                 <h2 className="text-2xl font-bold text-gray-900">{editingSub ? '구독 수정' : '구독 추가'}</h2>
 

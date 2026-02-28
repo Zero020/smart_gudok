@@ -1,17 +1,20 @@
-import { useState } from 'react';
+import { useState} from 'react';
 import { useSubscriptions } from '../hooks/useSubscriptions';
 import SubscriptionModal from '../components/SubscriptionModal';
 import type { Subscription } from '../types';
 import icon_trash from "..//assets/icon_trash.svg";
 import icon_edit from "..//assets/icon_edit.svg";
 import { trackEvent } from '../utils/analytics';
+import { useLocation } from 'react-router-dom';
 
 // 카테고리 목록(필터용)
 const CATEGORIES = ['전체', '쇼핑', '콘텐츠', '생활', '교육', '렌탈', '기타'];
 
 const Manage = () => {
   const { subscriptions, addSubscription, deleteSubscription, updateSubscription } = useSubscriptions();
-  const [filter, setFilter] = useState('전체');
+  const location = useLocation();
+  const initialFilter = location.state?.filterCategory ?? '전체';
+  const [filter, setFilter] = useState(initialFilter);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSub, setEditingSub] = useState<Subscription | null>(null);
 
@@ -28,11 +31,13 @@ const Manage = () => {
   };
 
   const handleOpenEdit = (sub: Subscription) => {
+    trackEvent('edit_modal_open', { service: sub.name });
     setEditingSub(sub);
     setIsModalOpen(true);
   };
 
   const handleSubmit = (sub: Subscription) => {
+    trackEvent('subscription_edit_submit');
     if (editingSub) updateSubscription(sub);
     else addSubscription(sub);
     setIsModalOpen(false);
@@ -54,6 +59,7 @@ const Manage = () => {
     if (level <= 70) return 'bg-yellow-400'; // 70% 이하: 노랑(보통)
     return 'bg-primary';                    // 100%까지: 청록/민트 (자주 사용)
   };
+
 
   return (
     <div className="p-8 max-w-6xl mx-auto space-y-10 bg-gray-50 min-h-screen">
@@ -86,7 +92,7 @@ const Manage = () => {
         </div>
         <button
           onClick={handleOpenAdd}
-          className="bg-primary text-white px-6 py-2 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-gray-200 hover:scale-105 transition-all"
+          className="bg-primary text-white cursor-pointer px-6 py-2 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-gray-200 hover:scale-105 transition-all"
         >
           <span className="text-lg">+</span> 구독 추가
         </button>

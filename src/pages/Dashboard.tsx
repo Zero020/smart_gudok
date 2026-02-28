@@ -1,10 +1,11 @@
 import { useMemo, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import type { Subscription } from '../types'; // 1. 타입 사용 확인
+import type { Subscription } from '../types';
 import { useSubscriptions } from '../hooks/useSubscriptions';
 import icon_alert from "..//assets/icon_alert.svg";
 import icon_alert_yellow from "..//assets/icon_alert_yellow.svg";
 import icon_down from "..//assets/icon_down.svg";
+import { useNavigate } from 'react-router-dom';
 import { trackEvent } from '../utils/analytics';
 
 const COLORS = ['#14B8A6', '#2DD4BF', '#85CFC2', '#4BB09F', '#1C8674', '#B9E4DD'];
@@ -13,9 +14,9 @@ const Dashboard = () => {
   useEffect(() => {
     trackEvent('home_view');
   }, []);
-  
-  const { subscriptions } = useSubscriptions();
 
+  const { subscriptions } = useSubscriptions();
+  const navigate = useNavigate();
   // 1. 월 총액 계산
   const monthlyTotal = useMemo(() =>
     subscriptions.reduce((acc, sub) => acc + (sub.price / (sub.sharedPeople || 1)), 0)
@@ -86,7 +87,16 @@ const Dashboard = () => {
     <div className="p-6 max-w-5xl mx-auto space-y-6 bg-gray-50 min-h-screen">
       {/* 엣지 케이스: 중복 구독 경고 배너 */}
       {duplicateInfo && (
-        <div className=" animate-pulse bg-orange-50 border border-orange-200 p-4 rounded-xl flex items-center gap-3 text-[#F6B74E] shadow-sm">
+        <div onClick={() => {
+          trackEvent('duplicate_banner_click', {
+            category: duplicateInfo.catName,
+          });
+          trackEvent('banner_to_manage_move');
+          navigate('/manage', {
+            state: { filterCategory: duplicateInfo.catName }
+          });
+        }}
+          className="cursor-pointer animate-pulse bg-orange-50 border border-orange-200 p-4 rounded-xl flex items-center gap-3 text-[#F6B74E] shadow-sm">
           <span className="text-xl"><img src={icon_alert_yellow} alt="alert" className="w-5 h-5" /></span>
           <p className="text-sm font-bold">
             잠깐! {duplicateInfo.catName}구독을 {duplicateInfo.count}개나 이용 중이시네요. <br />
