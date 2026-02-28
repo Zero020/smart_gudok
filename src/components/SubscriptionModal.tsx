@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Subscription, Category } from '../types';
+import { trackEvent } from '../utils/analytics';
 
 //구독 종류 옵션
 const FORM_CATEGORIES: Category[] = ['쇼핑', '콘텐츠', '생활', '교육', '렌탈', '기타'];
@@ -57,7 +58,7 @@ const SubscriptionModal = ({ isOpen, onClose, onSubmit, editingSub, subscription
         }
 
         // 서비스명 중복시 경고
-        const isDuplicate = subscriptions.some(sub => 
+        const isDuplicate = subscriptions.some(sub =>
             sub.name.toLowerCase() === name.trim().toLowerCase() && sub.id !== editingSub?.id
         );
 
@@ -66,9 +67,14 @@ const SubscriptionModal = ({ isOpen, onClose, onSubmit, editingSub, subscription
             if (!proceed) return;
         }
 
-        onSubmit({ 
-            ...formData, 
-            id: editingSub?.id || Date.now().toString() 
+        trackEvent('subscription_submit', {
+            category: formData.category,
+            price: formData.price
+        });
+
+        onSubmit({
+            ...formData,
+            id: editingSub?.id || Date.now().toString()
         } as Subscription);
     };
 

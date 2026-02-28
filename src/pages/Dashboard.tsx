@@ -1,14 +1,19 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import type { Subscription } from '../types'; // 1. 타입 사용 확인
 import { useSubscriptions } from '../hooks/useSubscriptions';
 import icon_alert from "..//assets/icon_alert.svg";
 import icon_alert_yellow from "..//assets/icon_alert_yellow.svg";
 import icon_down from "..//assets/icon_down.svg";
+import { trackEvent } from '../utils/analytics';
 
 const COLORS = ['#14B8A6', '#2DD4BF', '#85CFC2', '#4BB09F', '#1C8674', '#B9E4DD'];
 
 const Dashboard = () => {
+  useEffect(() => {
+    trackEvent('home_view');
+  }, []);
+  
   const { subscriptions } = useSubscriptions();
 
   // 1. 월 총액 계산

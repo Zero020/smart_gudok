@@ -4,6 +4,7 @@ import SubscriptionModal from '../components/SubscriptionModal';
 import type { Subscription } from '../types';
 import icon_trash from "..//assets/icon_trash.svg";
 import icon_edit from "..//assets/icon_edit.svg";
+import { trackEvent } from '../utils/analytics';
 
 // 카테고리 목록(필터용)
 const CATEGORIES = ['전체', '쇼핑', '콘텐츠', '생활', '교육', '렌탈', '기타'];
@@ -21,6 +22,7 @@ const Manage = () => {
 
   //등록/수정 모달 핸들러
   const handleOpenAdd = () => {
+    trackEvent('add_subscription_click');
     setEditingSub(null);
     setIsModalOpen(true);
   };
@@ -41,6 +43,7 @@ const Manage = () => {
     const isConfirmed = window.confirm(`'${name}' 구독을 정말 삭제하시겠습니까?`);
 
     if (isConfirmed) {
+      trackEvent('delete_subscription');
       deleteSubscription(id);
     }
   };
@@ -68,7 +71,10 @@ const Manage = () => {
           {CATEGORIES.map(cat => (
             <button
               key={cat}
-              onClick={() => setFilter(cat)}
+              onClick={() => {
+                trackEvent('category_filter_change', { category: cat });
+                setFilter(cat);
+              }}
               className={`hover:scale-102 cursor-pointer px-6 py-2 rounded-lg text-sm font-medium transition-all border ${filter === cat
                 ? 'bg-primary text-white stroke-1'
                 : 'bg-white text-gray-400 hover:border-[rgba(16,170,144,0.5)] border-gray-300'
