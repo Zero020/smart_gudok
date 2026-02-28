@@ -84,8 +84,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6 bg-gray-50 min-h-screen">
-      {/* 엣지 케이스: 중복 구독 경고 배너 */}
+    <div className="p-4 md:p-6 max-w-5xl mx-auto space-y-6 bg-gray-50 min-h-screen">      {/* 엣지 케이스: 중복 구독 경고 배너 */}
       {duplicateInfo && (
         <div onClick={() => {
           trackEvent('duplicate_banner_click', {
@@ -110,7 +109,7 @@ const Dashboard = () => {
 drop-shadow-[0_5px_20px_rgba(0,0,0,0.15)] p-8 rounded-2xl text-white shadow-lg relative overflow-hidden">
         <div className="relative z-10">
           <h2 className="text-xl opacity-90 font-bold">영님은 이번 달</h2>
-          <div className="text-4xl font-bold my-2">
+          <div className="text-2xl md:text-4xl font-bold my-2">
             {monthlyTotal.toLocaleString()}원 <span className="text-xl font-normal opacity-60 text-white
 ">을 구독 중이에요!</span>
           </div>
@@ -186,29 +185,29 @@ drop-shadow-[0_5px_20px_rgba(0,0,0,0.15)] p-8 rounded-2xl text-white shadow-lg r
         <div className="flex items-center gap-2 text-red-500 font-normal ml-2">
           <span className="animate-bounce font-serif"><img src={icon_alert} alt="logo" className="w-5 h-5" /></span> 이 서비스, 정말 쓰고 계신가요?
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">          
           {subscriptions.filter(s => s.usageLevel <= 30).length > 0 ? (
-            subscriptions.filter(s => s.usageLevel <= 30).map(sub => (
-              <div key={sub.id} className="bg-red-50 p-5 rounded-2xl border border-red-100 group hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-start">
-                  <div className="font-normal text-black-800 text-l ">{sub.name}</div>
-                  <div className="text-[11px] font-normal text-red-500 bg-white px-2 py-1 rounded-full border border-red-200">
-                    이용률 {sub.usageLevel}%
-                  </div>
-                </div>
-                <div className="mt-4 flex justify-between items-center">
-                  <div className="text-sm text-red-400 font-black">
-                    <p>  <span className="text-black font-normal">해지하면 연간 </span>
-                      {((sub.price / sub.sharedPeople) * 12).toLocaleString()}원<span className="text-black font-normal"> 절약 가능</span></p>
-                  </div>
+          subscriptions.filter(s => s.usageLevel <= 30).map(sub => (
+            <div key={sub.id} className="bg-red-50 p-5 rounded-2xl border border-red-100 group hover:shadow-md transition-shadow">
+              <div className="flex justify-between items-start">
+                <div className="font-normal text-black-800 text-l ">{sub.name}</div>
+                <div className="text-[11px] font-normal text-red-500 bg-white px-2 py-1 rounded-full border border-red-200">
+                  이용률 {sub.usageLevel}%
                 </div>
               </div>
-            ))
-          ) : (
-            <div className="col-span-2 p-10 rounded-2xl text-left text-gray-400 border-2 border-dashed border-gray-100">
-              와우, 모든 서비스를 알차게 구독 중이시군요!
+              <div className="mt-4 flex justify-between items-center">
+                <div className="text-sm text-red-400 font-black">
+                  <p>  <span className="text-black font-normal">해지하면 연간 </span>
+                    {((sub.price / sub.sharedPeople) * 12).toLocaleString()}원<span className="text-black font-normal"> 절약 가능</span></p>
+                </div>
+              </div>
             </div>
-          )}
+          ))
+        ) : (
+          <div className="col-span-2 p-10 rounded-2xl text-left text-gray-400 border-2 border-dashed border-gray-100">
+            와우, 모든 서비스를 알차게 구독 중이시군요!
+          </div>
+        )}
         </div>
       </div>
     </div>

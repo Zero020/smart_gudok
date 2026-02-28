@@ -21,23 +21,20 @@ function Navigation() {
     }`;
 
   return (
-    <nav className="flex justify-between items-center px-15 py-2 bg-white border-1 border-gray-100 sticky top-0 z-10">
-      <div className="flex items-center gap-1">
-        <img src={logo} alt="logo" className="w-18 h-12" />
+    <nav className="flex justify-between items-center px-4 md:px-15 py-2 bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+      <div className="flex items-center">
+        <img src={logo} alt="logo" className="w-14 h-10 md:w-18 md:h-12 object-contain" />
       </div>
-      <div className="flex gap-2 text-sm">
-        <Link to="/" className={tabClass(isActive('/'))}>          <img
-          src={isActive('/') ? menu_grid : menu_grid_inactive}
-          className="w-[22px] h-[22px]"
-        />
-          대시보드
+
+      {/* 탭 메뉴 간격 조절 */}
+      <div className="flex gap-1 md:gap-2">
+        <Link to="/" className={tabClass(isActive('/'))}>
+          <img src={isActive('/') ? menu_grid : menu_grid_inactive} className="w-5 h-5 md:w-[22px] md:h-[22px]" />
+          <span className="inline">대시보드</span> {/* 텍스트 항상 노출 */}
         </Link>
         <Link to="/manage" className={tabClass(isActive('/manage'))}>
-          <img
-            src={isActive('/') ? menu_list : menu_list_active}
-            className="w-[22px] h-[22px]"
-          />
-          구독 관리
+          <img src={isActive('/manage') ? menu_list_active : menu_list} className="w-5 h-5 md:w-[22px] md:h-[22px]" />
+          <span className="inline">구독 관리</span>
         </Link>
       </div>
     </nav>

@@ -73,7 +73,7 @@ const Manage = () => {
 
       {/* 필터 및 추가 버튼 */}
       <div className="flex justify-between items-center">
-        <div className="flex gap-2">
+        <div className="flex overflow-x-auto pb-2 gap-2 no-scrollbar px-1">
           {CATEGORIES.map(cat => (
             <button
               key={cat}
@@ -81,7 +81,7 @@ const Manage = () => {
                 trackEvent('category_filter_change', { category: cat });
                 setFilter(cat);
               }}
-              className={`hover:scale-102 cursor-pointer px-6 py-2 rounded-lg text-sm font-medium transition-all border ${filter === cat
+              className={`whitespace-nowrap hover:scale-102 cursor-pointer px-6 py-2 rounded-lg text-sm font-medium transition-all border ${filter === cat
                 ? 'bg-primary text-white stroke-1'
                 : 'bg-white text-gray-400 hover:border-[rgba(16,170,144,0.5)] border-gray-300'
                 }`}
@@ -92,9 +92,9 @@ const Manage = () => {
         </div>
         <button
           onClick={handleOpenAdd}
-          className="bg-primary text-white cursor-pointer px-6 py-2 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-gray-200 hover:scale-105 transition-all"
+          className="fixed bottom-6 right-6 md:static md:mb-6 flex items-center gap-2 bg-primary text-white px-6 py-4 md:py-3 rounded-full md:rounded-xl shadow-xl md:shadow-none font-bold z-40 transition-transform active:scale-95"
         >
-          <span className="text-lg">+</span> 구독 추가
+          <span className="text-lg">+</span><span className="hidden md:inline">구독 추가</span>
         </button>
       </div>
 
