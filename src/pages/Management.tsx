@@ -37,11 +37,17 @@ const Manage = () => {
   };
 
   const handleSubmit = (sub: Subscription) => {
+
+  if (editingSub) {
     trackEvent('subscription_edit_submit');
-    if (editingSub) updateSubscription(sub);
-    else addSubscription(sub);
-    setIsModalOpen(false);
-  };
+    updateSubscription(sub);
+  } else {
+    trackEvent('subscription_add_submit');
+    addSubscription(sub);
+  }
+
+  setIsModalOpen(false);
+};
 
   const handleDelete = (id: string, name: string) => {
     // 브라우저 기본 확인 창 호출

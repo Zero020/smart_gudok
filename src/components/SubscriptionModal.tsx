@@ -97,11 +97,7 @@ const SubscriptionModal = ({ isOpen, onClose, onSubmit, editingSub, subscription
                             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-primary transition-all"
                             placeholder="Netflex, Wave 등"
                             value={formData.name}
-                            onChange={e => {
-                                const value = Number(e.target.value)
-                                setFormData({ ...formData, usageLevel: value })
-                                trackEvent('usage_level_change', { value })
-                            }}
+                            onChange={e => setFormData({ ...formData, name: e.target.value })}
                         />
                     </div>
 
@@ -171,7 +167,15 @@ const SubscriptionModal = ({ isOpen, onClose, onSubmit, editingSub, subscription
                             type="range"
                             className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-primary"
                             value={formData.usageLevel}
-                            onChange={e => setFormData({ ...formData, usageLevel: Number(e.target.value) })}
+                            onChange={e => {
+                                const value = Number(e.target.value);
+                                setFormData({ ...formData, usageLevel: value });
+
+                                trackEvent('usage_level_change', {
+                                    value,
+                                    service: formData.name || 'unknown'
+                                });
+                            }}
                         />
                         <div className="flex justify-between text-[11px] text-gray-400 font-bold">
                             <span>거의 안씀</span>
